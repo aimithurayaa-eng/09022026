@@ -9,7 +9,7 @@ const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: 'assistant', 
-      content: 'Hai! Saya **JOMRUMAHBOT** 🤖\n\nSaya sedia membantu anda menganalisis data perumahan NAPIC 2024. Sila tanya tentang daerah atau negeri pilihan anda.' 
+      content: 'Hai! Saya JOMRUMAHBOT 🤖\nSaya sedia membantu anda memahami situasi perumahan secara ringkas dan mudah.\nSila tanyakan kawasan atau negeri pilihan anda.' 
     }
   ]);
   const [input, setInput] = useState('');
@@ -54,7 +54,10 @@ const App: React.FC = () => {
         
         <div className="flex items-center gap-3">
           <button 
-            onClick={() => setMessages([{ role: 'assistant', content: 'Sembang baru dimulakan. Apa yang anda ingin tahu tentang data perumahan hari ini?' }])} 
+            onClick={() => setMessages([{ 
+              role: 'assistant', 
+              content: 'Hai! Saya JOMRUMAHBOT 🤖\nSaya sedia membantu anda memahami situasi perumahan secara ringkas dan mudah.\nSila tanyakan kawasan atau negeri pilihan anda.' 
+            }])} 
             className="p-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all active:scale-90"
             title="Sembang Baru"
           >
