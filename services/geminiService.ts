@@ -1,28 +1,45 @@
 import { GoogleGenAI } from "@google/genai";
+import { RAW_CSV_DATA, SYSTEM_INSTRUCTION } from "../constants";
 
-const apiKey = import.meta.env.VITE_API_KEY;
+export const callGemini = async (prompt: string) => {
+  try {
+    const ai = new GoogleGenAI({
+      apiKey: import.meta.env.VITE_API_KEY
+    });
 
-if (!apiKey) {
-  throw new Error(
-    "VITE_API_KEY tidak dijumpai. Sila set di Vercel Environment Variables atau .env"
-  );
-}
+    const fullSystemInstruction = `
+${SYSTEM_INSTRUCTION}
 
-const ai = new GoogleGenAI({ apiKey });
+DATA CSV (WAJIB DIGUNAKAN UNTUK ANALISIS):
+${RAW_CSV_DATA}
+`;
 
-export async function callGemini(
-  prompt: string,
-  systemInstruction?: string,
-  rawCsv?: string
-): Promise<string> {
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-    config: {
-      systemInstruction: `${systemInstruction ?? ""}\n\nData CSV:\n${rawCsv ?? ""}`.trim(),
-      temperature: 0.1,
-    },
-  });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
 
-  return response.text ?? "";
-}
+      systemInstruction: {
+        role: "system",
+        parts: [{ text: fullSystemInstruction }]
+      },
+
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: prompt }]
+        }
+      ],
+
+      config: {
+        temperature: 0.1,
+        maxOutputTokens: 800
+      }
+    });
+
+    return response.text ?? 
+      "Maaf, sistem JOMRUMAHBOT tidak dapat memproses analisis buat masa ini.";
+
+  } catch (error) {
+    console.error("Gemini API Error:", error);
+    return "Ralat sistem AI. Sila cuba semula.";
+  }
+};
